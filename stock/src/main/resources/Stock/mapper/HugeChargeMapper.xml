@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viki.stock.dao.HugeChargeDao">
+	<select id="query" parameterType="map" resultType="com.viki.stock.bean.HugeChargeCrarge">
+		select * from stock_huge_charge
+	</select>
+	
+	<insert id="insert" parameterType="com.viki.stock.bean.HugeChargeCrarge">
+		INSERT INTO stock_huge_charge(
+			STOCK_CODE,
+			STOCK_NAME, 
+			CHARGE_DATE, 
+			BID_PRICE, 
+			CLOSE_PRICE,
+			VOLUME,
+			PREMIUM_RATE,
+			BUYER,
+			SELLER)
+		VALUES(
+			#{stockCode},
+			#{stockShort},
+			#{date},
+			#{bidPrice},
+			#{closingPrice},
+			#{volume},
+			#{premiumRate},
+			#{buyer},
+			#{saler}
+		)
+	</insert>
+</mapper>

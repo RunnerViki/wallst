@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockConceptRefDao">
+
+	<insert id="merge" parameterType="com.viki.stock.pojo.StockConceptRefBean">
+		INSERT INTO stock_concept_ref(
+		STOCK_CODE,
+		CONCEPT_ID
+		)
+		VALUES(
+		#{STOCK_CODE},
+		#{CONCEPT_ID}
+		)  ON DUPLICATE KEY UPDATE
+		STOCK_CODE = values(STOCK_CODE)
+	</insert>
+</mapper>

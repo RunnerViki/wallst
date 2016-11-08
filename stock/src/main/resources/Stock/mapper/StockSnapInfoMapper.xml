@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viki.stock.dao.StockSnapInfoDao">
+	<select id="query" parameterType="map" resultType="com.viki.stock.bean.StockSnapInfo">
+		select STOCK_CODE, SHIYINLV,SHIYINLV_STATIC,SHIJINGLV,EARN_PER_STOCK,ZONG_GU_BEN,LIU_TONG_GU,VERSION from stock_snap_info
+		<where>
+			<if test="STOCK_CODE != null and STOCK_CODE != ''">
+				and STOCK_CODE = #{STOCK_CODE}
+			</if>
+			<if test="SHIYINLV != null and SHIYINLV != ''">
+				and SHIYINLV = #{SHIYINLV}
+			</if>
+			<if test="SHIYINLV_STATIC != null and SHIYINLV_STATIC != ''">
+				and SHIYINLV_STATIC = #{SHIYINLV_STATIC}
+			</if>
+			<if test="SHIJINGLV != null and SHIJINGLV != ''">
+				and SHIJINGLV = #{SHIJINGLV}
+			</if>
+			<if test="EARN_PER_STOCK != null and EARN_PER_STOCK != ''">
+				and EARN_PER_STOCK = #{EARN_PER_STOCK}
+			</if>
+			<if test="ZONG_GU_BEN != null and ZONG_GU_BEN != ''">
+				and ZONG_GU_BEN = #{ZONG_GU_BEN}
+			</if>
+			<if test="LIU_TONG_GU != null and LIU_TONG_GU != ''">
+				and LIU_TONG_GU = #{LIU_TONG_GU}
+			</if>
+			<if test="VERSION != null and VERSION != ''">
+				and VERSION = #{VERSION}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="merge" parameterType="com.viki.stock.bean.StockSnapInfo">
+		INSERT INTO stock_snap_info(
+			STOCK_CODE,
+			SHIYINLV, 
+			SHIYINLV_STATIC, 
+			SHIJINGLV, 
+			EARN_PER_STOCK,
+			ZONG_GU_BEN,
+			LIU_TONG_GU,
+			VERSION)
+		VALUES(
+			#{stockCode},
+			#{shiYinLv},
+			#{shiYinLvStatic},
+			#{shiJingLv},
+			#{earnPerStock},
+			#{zongGuBen},
+			#{LiuTongGu},
+			#{version}
+		) ON DUPLICATE KEY UPDATE 
+			SHIYINLV = VALUES(SHIYINLV),
+			SHIYINLV_STATIC = VALUES(SHIYINLV_STATIC),
+			SHIJINGLV = VALUES(SHIJINGLV),
+			EARN_PER_STOCK = VALUES(EARN_PER_STOCK),
+			ZONG_GU_BEN = VALUES(ZONG_GU_BEN),
+			LIU_TONG_GU = VALUES(LIU_TONG_GU)
+	</insert>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viki.stock.dao.AnalysisDao">
+	<resultMap type="java.util.TreeMap" id="trends">
+		<id property="key" column="CHARGE_TIME"/>
+		<result property="value" column="TRENDS" />
+	</resultMap>
+
+	<insert id="insertABC" parameterType="map">
+		INSERT INTO stock_calc(STOCK_CODE, STOCK_DATE, A_${idx}, B_${idx}, C_${idx})
+		SELECT dc.stock_code,
+		       date(date_add(now(), interval -9 hour)) add_date,
+		       sum(dc.zhang_die_fu) AS zdf_three_days ,
+		       sum(dc.HUAN_SHOU_LV),
+		       sum(dc.ZIN_JI_JIN_LIU_RU)
+		FROM stock_daily_charge dc
+		
+		<if test="idx == 1">
+			where add_date = date(date_add(now(), interval -9 hour))
+		</if>
+		<if test="idx == 2">
+			<![CDATA[
+			WHERE dc.add_date <= date(date_add(now(), interval -9 hour))
+			  AND dc.add_date >= date(date_add(now(), interval -57 hour))
+			]]>
+		</if>
+		<if test="idx == 3">
+			<![CDATA[
+			WHERE dc.add_date <= date(date_add(now(), interval -9 hour))
+			  AND dc.add_date >= date(date_add(now(), interval -105 hour))
+			]]>
+		</if>
+		<if test="idx == 4">
+			<![CDATA[
+			WHERE dc.add_date <= date(date_add(now(), interval -9 hour))
+			  AND dc.add_date >= date(date_add(now(), interval -225 hour))
+			]]>
+		</if>
+		GROUP BY dc.stock_code ON duplicate KEY
+		UPDATE stock_calc.A_${idx} = VALUES(A_${idx}), 
+			   stock_calc.B_${idx} = VALUES(B_${idx}),
+			   stock_calc.C_${idx} = VALUES(C_${idx});
+		
+	</insert>
+
+	<select id="queryD_summary" parameterType="map" resultType="hashMap">
+		<![CDATA[
+		select STOCK_CODE stock_code, round(count(d.STOCK_CODE) * 0.01) one_percent
+			, round(count(d.STOCK_CODE) * 0.03) three_percent
+			, round(count(d.STOCK_CODE) * 0.05) five_percent
+			, round(count(d.STOCK_CODE) * 0.10) ten_percent
+			, sum(d.VOLUME) volume
+		from stock_charge_detail_${partition} d  
+		where d.STOCK_CODE < 100 and d.CHARGE_TIME > date(date_add(now(), interval - 9 hour))
+		group by d.STOCK_CODE, date(d.CHARGE_TIME)
+		]]>
+	</select>
+	
+	<!-- 查询前count条最大交易量的数据中，总买盘资金占总交易额的百分比和总卖盘占总交易额中的百分比 -->
+	<insert id="insertD" parameterType="map">
+		INSERT INTO stock_calc ( stock_code, stock_date, d_${buyerIdx}, d_${sellerIdx} )
+		SELECT t.stock_code,
+		       t.charge_date,
+		       Round(Sum( CASE t.type WHEN 'B' THEN t.volume ELSE 0 END) / ${total_volume}, 4) buy_amount,
+		       Round(Sum( CASE t.type WHEN 'S' THEN t.volume ELSE 0 END) / ${total_volume}, 4) sell_amount
+		FROM
+		  ( SELECT stock_code, date(d.charge_time) charge_date, TYPE, volume
+		   FROM stock_charge_detail_${partition} d
+		   WHERE d.stock_code = #{stock_code}
+		     AND d.charge_time > date(date_add(now(), INTERVAL - 9 hour))
+		   ORDER BY d.volume DESC LIMIT 0,${count})t ON duplicate KEY
+		UPDATE stock_calc.d_1 = VALUES ( d_1 ) , 
+			   stock_calc.d_5 = VALUES ( d_5 )
+	</insert>
+	
+	<select id="queryTrends"  parameterType="hashMap" resultMap="trends">
+		SELECT round((d.PRICE - dc.ZOU_SHOU) / dc.ZOU_SHOU * 100, 2) TRENDS,
+		       date_format(d.CHARGE_TIME, '%Y/%m/%d %H:%i') CHARGE_TIME
+		FROM stock_charge_detail_${stock_partition} d
+		INNER JOIN stock_daily_charge dc ON d.STOCK_CODE = dc.STOCK_CODE
+		AND date(d.CHARGE_TIME) = dc.ADD_DATE
+		WHERE d.STOCK_CODE = #{STOCK_CODE}
+		  AND date(d.CHARGE_TIME) = date_add(curdate(), interval -13 DAY);
+	</select>
+</mapper>

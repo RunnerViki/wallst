@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" 
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/task
+            spring-task-4.1.xsd">
+
+	<task:scheduler id="ext_task_group" pool-size="10"/>
+	<task:scheduled-tasks scheduler="ext_task_group" >
+		<task:scheduled ref="task-NetEaseChageDetailCrawler" method="run" fixed-delay="86400000" remark="从网易获取交易详情数据文件，下载到本地"/>
+		<task:scheduled ref="task-NetEaseChargeDetailConveter" method="run" fixed-delay="3600000" remark="把网易数据转换后保存到数据库， 每小时一次"/>
+		<task:scheduled ref="task-cmfb-tencent" method="run" fixed-delay="86400000" remark="从腾讯获取筹码分布数据"/>
+		<task:scheduled ref="task-stockBaseInfo-ths" method="run" fixed-delay="86400000" remark="股票基础数据"/>
+		<task:scheduled ref="task-hugeChargeCrawler-ths" method="run" fixed-delay="86400000" remark="大单交易数据"/>
+		<task:scheduled ref="task-THSLongHuRankCrawler" method="run" fixed-delay="86400000" remark="龙虎榜交易数据"/>
+		<!--<task:scheduled ref="task-THSConceptCrawler" method="run" fixed-delay="86400000" remark="股票概念数据"/>-->
+		<task:scheduled ref="task-stockAgentCrawler-ths" method="runInTotal" fixed-delay="86400000" remark="股票运营商数据"/>
+		<task:scheduled ref="task-THSStockDailyReportCrawler" method="run" fixed-delay="86400000" remark="股票单日快照数据"/>
+		<task:scheduled ref="task-snHugeChargeCrawler-ths" method="run" fixed-delay="86400000" remark="大宗交易"/>
+	</task:scheduled-tasks>
+
+	<bean id="task-snHugeChargeCrawler-ths" class="com.viki.stock.crawler.SnHugeChargeCrawler" />
+	<bean id="task-stockAgentCrawler-ths" class="com.viki.stock.crawler.THSStockAgentCrawler" />
+	<bean id="task-cmfb-tencent" class="com.viki.stock.crawler.TencentCYQ"></bean>
+	<bean id="task-stockBaseInfo-ths" class="com.viki.stock.crawler.THSStockBasicInfoCrawler" />
+	<bean id="task-stockDoctor-ths" class="com.viki.stock.crawler.THSStockDoctorCrawler" />
+	<bean id="task-hugeChargeCrawler-ths" class="com.viki.stock.crawler.THSHugeChargeCrawler" />
+	<bean id="task-THSLongHuRankCrawler" class="com.viki.stock.crawler.THSLongHuRankCrawler" />
+	<bean id="task-NetEaseChageDetailCrawler" class="com.viki.stock.crawler.NetEaseChageDetailCrawler" />
+	<bean id="task-THSStockDailyReportCrawler" class="com.viki.stock.crawler.THSStockDailyReportCrawler" />
+	<bean id="task-taskReporter" class="com.viki.stock.crawler.TaskReporter" />
+	<bean id="task-THSConceptCrawler" class="com.viki.stock.crawler.THSConceptCrawler" />
+	<bean id="task-NetEaseChargeDetailConveter" class="com.viki.stock.crawler.NetEaseChargeDetailConveter" />
+</beans>

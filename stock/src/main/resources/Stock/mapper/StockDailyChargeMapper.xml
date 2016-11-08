@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.DailyChargeDao">
+	<select id="query" parameterType="Map"
+		resultType="com.viki.stock.bean.StockDailyCharge">
+		select * from stock_daily_charge
+		<if test="recentDay == 1">
+			<where>
+				add_date = curdate()
+			</where>
+		</if>
+
+	</select>
+
+	<insert id="merge" parameterType="com.viki.stock.bean.StockDailyCharge">
+		INSERT INTO stock_daily_charge(
+			STOCK_CODE,
+			STOCK_NAME,
+			ZUI_XIN_JIA,
+			ZHANG_DIE_E,
+			ZHANG_DIE_FU,
+			ZOU_SHOU,
+			JIN_KAI,
+			ZUI_GAO_JIA,
+			ZUI_DI_JIA,
+			CHENG_JIAO_LIANG,
+			CHENG_JIAO_E,
+			ZIN_JI_JIN_LIU_RU,
+			HUAN_SHOU_LV,
+			REPORT_TIME,
+			ADD_DATE
+		)
+		VALUES(
+			#{STOCK_CODE},
+			#{STOCK_NAME},
+			#{ZUI_XIN_JIA},
+			#{ZHANG_DIE_E},
+			#{ZHANG_DIE_FU},
+			#{ZOU_SHOU},
+			#{JIN_KAI},
+			#{ZUI_GAO_JIA},
+			#{ZUI_DI_JIA},
+			#{CHENG_JIAO_LIANG},
+			#{CHENG_JIAO_E},
+			#{ZIN_JI_JIN_LIU_RU},
+			#{HUAN_SHOU_LV},
+			#{REPORT_TIME},
+			#{ADD_DATE}
+		) ON DUPLICATE KEY UPDATE
+		STOCK_CODE = VALUES(STOCK_CODE)
+	</insert>
+</mapper>

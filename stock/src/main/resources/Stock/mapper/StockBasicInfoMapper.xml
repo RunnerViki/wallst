@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockBasicInfoDao">
+	<resultMap id="STOCKMap" type="com.viki.stock.bean.StockBasicInfo">
+		<result property="id" column="Id" />
+		<result property="stockCode" column="STOCK_CODE" />
+		<result property="marketCode" column="STOCK_MKTCODE" />
+		<result property="stockName" column="STOCK_NAME" />
+		<result property="mainBusiness" column="MAIN_BUSINESS" />
+		<result property="volumnType" column="VOLUME_TYPE" />
+		<result property="activeStatus" column="ACTIVE_STATUS" />
+		<result property="sectorBelong" column="SECTOR" />
+	</resultMap>
+
+	<select id="query" parameterType="Map" resultMap="STOCKMap">
+		select
+		STOCK_CODE,STOCK_NAME,STOCK_MKTCODE,MAIN_BUSINESS,VOLUME_TYPE,ACTIVE_STATUS,UPDATE_TIME
+		from stock_basic_info
+
+		<where>
+			<if test="STOCK_CODE != null and STOCK_CODE != ''">
+				and STOCK_CODE = #{STOCK_CODE}
+			</if>
+			<if test="STOCK_NAME != null and STOCK_NAME != ''">
+				and STOCK_NAME = #{STOCK_NAME}
+			</if>
+			<if test="STOCK_MKTCODE != null and STOCK_MKTCODE != ''">
+				and STOCK_MKTCODE = #{STOCK_MKTCODE}
+			</if>
+			<if test="MAIN_BUSINESS != null and MAIN_BUSINESS != ''">
+				and MAIN_BUSINESS = #{MAIN_BUSINESS}
+			</if>
+			<if test="VOLUME_TYPE != null and VOLUME_TYPE != ''">
+				and VOLUME_TYPE = #{VOLUME_TYPE}
+			</if>
+			<if test="ACTIVE_STATUS != null and ACTIVE_STATUS != ''">
+				and ACTIVE_STATUS = #{ACTIVE_STATUS}
+			</if>
+			<if test="UPDATE_TIME != null and UPDATE_TIME != ''">
+				and UPDATE_TIME = #{UPDATE_TIME}
+			</if>
+		</where>
+	</select>
+
+	<insert id="merge" parameterType="com.viki.stock.bean.StockBasicInfo">
+		INSERT INTO STOCK_BASIC_INFO(
+		STOCK_CODE,
+		STOCK_NAME,
+		STOCK_MKTCODE,
+		MAIN_BUSINESS,
+		VOLUME_TYPE,
+		SECTOR)
+		VALUES(
+		#{stockCode},
+		#{stockName},
+		#{marketCode},
+		#{mainBusiness},
+		#{volumnType},
+		#{sectorBelong}
+		) ON DUPLICATE KEY UPDATE
+		STOCK_MKTCODE = VALUES(STOCK_MKTCODE),
+		MAIN_BUSINESS = VALUES(MAIN_BUSINESS),
+		VOLUME_TYPE = VALUES(VOLUME_TYPE),
+		SECTOR = VALUES(SECTOR)
+	</insert>
+	
+	<select id="queryMissingStockData" resultMap="STOCKMap" parameterType="string">
+		SELECT sbi.STOCK_CODE,sbi.STOCK_NAME,sbi.STOCK_MKTCODE,sbi.MAIN_BUSINESS,sbi.VOLUME_TYPE,sbi.ACTIVE_STATUS,sbi.UPDATE_TIME
+		FROM stock_basic_info sbi
+		WHERE stock_code NOT IN(
+			SELECT sbi.STOCK_CODE
+			FROM stock_basic_info sbi, netease_stock_crawl_record scr
+			WHERE sbi.STOCK_CODE = scr.stock_code AND DATE_FORMAT(scr.stock_date,'%Y%m%d') = #{date})
+	</select>
+</mapper>

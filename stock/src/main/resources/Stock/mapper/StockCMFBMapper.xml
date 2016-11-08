@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.CMFBDao">
+	<select id="query" parameterType="Map" resultType="com.viki.stock.bean.CMFB">
+		select		*		from stock_cmfb
+	</select>
+
+	<insert id="merge" parameterType="com.viki.stock.bean.CMFB">
+		INSERT INTO stock_cmfb(
+		STOCK_CODE,
+		PRICE_DEGREE,
+		ADD_DATE,
+		LOW_PRICE,
+		HIGH_PRICE,
+		PRICE,
+		TRENDS_COEFFICIENT)
+		VALUES(
+		#{STOCK_CODE},
+		#{PRICE_DEGREE},
+		#{ADD_DATE},
+		#{LOW_PRICE},
+		#{HIGH_PRICE},
+		#{PRICE},
+		#{TRENDS_COEFFICIENT}
+		) ON DUPLICATE KEY UPDATE
+		PRICE_DEGREE = VALUES(PRICE_DEGREE),
+		LOW_PRICE = VALUES(LOW_PRICE),
+		HIGH_PRICE = VALUES(HIGH_PRICE),
+		TRENDS_COEFFICIENT = VALUES(TRENDS_COEFFICIENT),
+		PRICE = VALUES(PRICE)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO stock_cmfb(
+		STOCK_CODE,
+		PRICE_DEGREE,
+		ADD_DATE,
+		LOW_PRICE,
+		HIGH_PRICE,
+		PRICE,
+		TRENDS_COEFFICIENT)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >  
+		(#{item.STOCK_CODE},
+		#{item.PRICE_DEGREE},
+		#{item.ADD_DATE},
+		#{item.LOW_PRICE},
+		#{item.HIGH_PRICE},
+		#{item.PRICE},
+		#{item.TRENDS_COEFFICIENT}) 
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		PRICE_DEGREE = VALUES(PRICE_DEGREE),
+		LOW_PRICE = VALUES(LOW_PRICE),
+		HIGH_PRICE = VALUES(HIGH_PRICE),
+		TRENDS_COEFFICIENT = VALUES(TRENDS_COEFFICIENT),
+		PRICE = VALUES(PRICE)
+	</insert>
+</mapper>

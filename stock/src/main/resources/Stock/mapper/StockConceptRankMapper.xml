@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockConceptRankDao">
+
+	<insert id="merge" parameterType="com.viki.stock.pojo.StockConceptRankBean">
+		INSERT INTO stock_concept_rank(
+			STOCK_CODE,
+			CONCEPT_ID,
+			RANK_NUM,
+			ADD_DATE,
+			TURNOVER_RATE_INFIVE,
+			SPREAD_RATE_IN_FIVE
+		)
+		VALUES(
+			#{STOCK_CODE},
+			#{CONCEPT_ID},
+			#{RANK_NUM},
+			#{ADD_DATE},
+			#{TURNOVER_RATE_INFIVE},
+			#{SPREAD_RATE_IN_FIVE}
+		)  ON DUPLICATE KEY UPDATE
+		INDEX_CHANGE = VALUES(INDEX_CHANGE),
+		XIA_DIE_SHU = VALUES(XIA_DIE_SHU),
+		SHANG_ZHANG_SHU = VALUES(SHANG_ZHANG_SHU),
+		CHENG_JIAO_E = VALUES(CHENG_JIAO_E),
+		ZI_JING_JIN_LIU_RU = VALUES(ZI_JING_JIN_LIU_RU),
+		CHANGE_PERCENT = VALUES(CHANGE_PERCENT),
+		INDEX = VALUES(INDEX)
+	</insert>
+</mapper>

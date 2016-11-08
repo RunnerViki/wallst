@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockConceptChangeDao">
+
+	<insert id="merge" parameterType="com.viki.stock.pojo.StockConceptChangeBean">
+		INSERT INTO stock_concept_change(
+			CONCEPT_ID,
+			INDEX_CHANGE,
+			INDEX_,
+			CHANGE_PERCENT,
+			ZI_JING_JIN_LIU_RU,
+			CHENG_JIAO_E,
+			SHANG_ZHANG_SHU,
+			XIA_DIE_SHU,
+			ADD_DATE
+		)
+		VALUES(
+			#{CONCEPT_ID},
+			#{INDEX_CHANGE},
+			#{INDEX_},
+			#{CHANGE_PERCENT},
+			#{ZI_JING_JIN_LIU_RU},
+			#{CHENG_JIAO_E},
+			#{SHANG_ZHANG_SHU},
+			#{XIA_DIE_SHU},
+			#{ADD_DATE}
+		) ON DUPLICATE KEY UPDATE
+		INDEX_CHANGE = VALUES(INDEX_CHANGE),
+		XIA_DIE_SHU = VALUES(XIA_DIE_SHU),
+		SHANG_ZHANG_SHU = VALUES(SHANG_ZHANG_SHU),
+		CHENG_JIAO_E = VALUES(CHENG_JIAO_E),
+		ZI_JING_JIN_LIU_RU = VALUES(ZI_JING_JIN_LIU_RU),
+		CHANGE_PERCENT = VALUES(CHANGE_PERCENT),
+		INDEX_ = VALUES(INDEX_)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO stock_concept_change(
+			CONCEPT_ID,
+			INDEX_CHANGE,
+			INDEX_,
+			CHANGE_PERCENT,
+			ZI_JING_JIN_LIU_RU,
+			CHENG_JIAO_E,
+			SHANG_ZHANG_SHU,
+			XIA_DIE_SHU,
+			ADD_DATE
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >  
+		(
+			#{item.CONCEPT_ID},
+			#{item.INDEX_CHANGE},
+			#{item.INDEX_},
+			#{item.CHANGE_PERCENT},
+			#{item.ZI_JING_JIN_LIU_RU},
+			#{item.CHENG_JIAO_E},
+			#{item.SHANG_ZHANG_SHU},
+			#{item.XIA_DIE_SHU},
+			#{item.ADD_DATE}
+		) 
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		INDEX_CHANGE = VALUES(INDEX_CHANGE),
+		XIA_DIE_SHU = VALUES(XIA_DIE_SHU),
+		SHANG_ZHANG_SHU = VALUES(SHANG_ZHANG_SHU),
+		CHENG_JIAO_E = VALUES(CHENG_JIAO_E),
+		ZI_JING_JIN_LIU_RU = VALUES(ZI_JING_JIN_LIU_RU),
+		CHANGE_PERCENT = VALUES(CHANGE_PERCENT),
+		INDEX_ = VALUES(INDEX_)
+	</insert>
+</mapper>

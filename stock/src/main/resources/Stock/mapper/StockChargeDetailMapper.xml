@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockChargeDetailDao">
+	<select id="query" parameterType="Map" resultType="com.viki.stock.pojo.StockChargeDetailBean">
+		select		*		from stock_charge_detail
+	</select>
+
+	<insert id="merge" parameterType="com.viki.stock.pojo.StockChargeDetailBean">
+		INSERT INTO stock_charge_detail_${table_num}(
+			STOCK_CODE,
+			CHARGE_TIME,
+			PRICE,
+			PRICE_CHANGE,
+			AMOUNT,
+			VOLUME,
+			TYPE
+		)
+		VALUES(
+			#{STOCK_CODE},
+			#{CHARGE_TIME},
+			#{PRICE},
+			#{PRICE_CHANGE},
+			#{AMOUNT},
+			#{VOLUME},
+			#{TYPE}
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="hashMap">
+		INSERT INTO stock_charge_detail_${table_num}(
+			STOCK_CODE,
+			CHARGE_TIME,
+			PRICE,
+			PRICE_CHANGE,
+			AMOUNT,
+			VOLUME,
+			TYPE
+		)values
+	    <foreach collection="list" item="item" index="index" separator="," >  
+	        (#{item.STOCK_CODE},
+			#{item.CHARGE_TIME},
+			#{item.PRICE},
+			#{item.PRICE_CHANGE},
+			#{item.AMOUNT},
+			#{item.VOLUME},
+			#{item.TYPE})  
+	    </foreach>
+	    ON DUPLICATE KEY UPDATE
+		STOCK_CODE = VALUES(STOCK_CODE)
+	</insert>
+</mapper>

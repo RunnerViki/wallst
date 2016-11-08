@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockDailyPriceThreholdDao">
+	<select id="query" parameterType="Map" resultType="com.viki.stock.bean.StockDailyPriceThrehold">
+		select		*		from stock_daily_price_threhold
+	</select>
+
+	<insert id="merge" parameterType="com.viki.stock.bean.StockDailyPriceThrehold">
+		INSERT INTO stock_daily_price_threhold(
+			STOCK_CODE,
+			ADD_DATE,
+			PRESS_PRICE,
+			HOLD_PRICE,
+			KONGPAN_RATE,
+			KONGPAN_RATE_LAST
+		)
+		VALUES(
+			#{STOCK_CODE},
+			#{ADD_DATE},
+			#{PRESS_PRICE},
+			#{HOLD_PRICE},
+			#{KONGPAN_RATE},
+			#{KONGPAN_RATE_LAST}
+		) ON DUPLICATE KEY UPDATE
+		STOCK_CODE = VALUES(STOCK_CODE)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO stock_daily_price_threhold(
+			STOCK_CODE,
+			ADD_DATE,
+			PRESS_PRICE,
+			HOLD_PRICE,
+			KONGPAN_RATE,
+			KONGPAN_RATE_LAST
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >  
+		(#{item.STOCK_CODE},
+		#{item.ADD_DATE},
+		#{item.PRESS_PRICE},
+		#{item.HOLD_PRICE},
+		#{item.KONGPAN_RATE},
+		#{item.KONGPAN_RATE_LAST}) 
+		</foreach>
+		 ON DUPLICATE KEY UPDATE
+		STOCK_CODE = VALUES(STOCK_CODE)
+	</insert>
+</mapper>

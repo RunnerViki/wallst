@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.StockConceptDao">
+
+	<insert id="merge" parameterType="com.viki.stock.pojo.StockConceptBean" >
+		INSERT INTO stock_concept(
+			CONCEPT_ID,
+			CONCEPT_NAME,
+			VISIT_URL,
+			CONCEPT_CODE
+		)
+		VALUES(
+			#{CONCEPT_ID},
+			#{CONCEPT_NAME},
+			#{VISIT_URL},
+			#{CONCEPT_CODE}
+		)ON DUPLICATE KEY UPDATE
+		VISIT_URL = VALUES(VISIT_URL),
+		CONCEPT_CODE = VALUES(CONCEPT_CODE)
+	</insert>
+</mapper>

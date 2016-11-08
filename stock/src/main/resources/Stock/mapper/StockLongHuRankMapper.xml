@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.viki.stock.dao.LongHuRankDao">
+	<select id="query" parameterType="Map" resultType="com.viki.stock.bean.LongHuRank">
+		select		*		from stock_long_hu_rank
+	</select>
+
+	<insert id="merge" parameterType="com.viki.stock.bean.LongHuRank">
+		INSERT INTO stock_long_hu_rank(
+		STOCK_CODE,
+		STOCK_SHORT,
+		EXCLUSIVE_INTERPRETATION,
+		CLOSING_PRICE,
+		PRICE_LIMIT,
+		TURNOVER,
+		PURCHASE,
+		SELL,
+		NET_BUYING_AMOUNT,
+		SUCCESS_RATE,
+		RANK_TYPE,
+		ADD_DATE
+		)
+		VALUES(
+		#{STOCK_CODE},
+		#{STOCK_SHORT},
+		#{EXCLUSIVE_INTERPRETATION},
+		#{CLOSING_PRICE},
+		#{PRICE_LIMIT},
+		#{TURNOVER},
+		#{PURCHASE},
+		#{SELL},
+		#{NET_BUYING_AMOUNT},
+		#{SUCCESS_RATE},
+		#{RANK_TYPE},
+		#{ADD_DATE}
+		) ON DUPLICATE KEY UPDATE
+		EXCLUSIVE_INTERPRETATION = VALUES(EXCLUSIVE_INTERPRETATION),
+		RANK_TYPE = VALUES(RANK_TYPE)
+	</insert>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.viki.stock.dao.StockAgentDao">
+	
+	<insert id="merge" parameterType="HashMap">
+		INSERT INTO stock_agent(
+			agent_name,
+			agent_code)
+		VALUES
+		<foreach collection="totalAgentInfo.keys" item="key" separator=",">
+			(
+			#{totalAgentInfo[${key}]},
+			#{key}
+			)
+		</foreach>
+		 ON DUPLICATE KEY UPDATE
+			agent_name = VALUES(agent_name)
+	</insert>
+
+	<select id="query" parameterType="HashMap" resultType="HashMap">
+		select agent_name, agent_code from stock_agent
+	</select>
+
+	<insert id="insert" parameterType="HashMap">
+		INSERT INTO stock_agent_charge_detail(
+			agent_code,
+			stock_name,
+			stock_code,
+			stock_feature,
+			stock_amount,
+			charge_date,
+			buy_or_sell,
+			stock_sum,
+			add_time)
+		VALUES
+		<foreach collection="chargeList" item="i" separator=",">
+			(
+			#{i.agent_code},
+			#{i.stock_name},
+			#{i.stock_code},
+			#{i.stock_feature},
+			#{i.stock_amount},
+			#{i.charge_date},
+			#{i.buy_or_sell},
+			#{i.stock_sum},now()
+			)
+		</foreach>
+		 ON DUPLICATE KEY UPDATE
+			agent_code = VALUES(agent_code),
+			stock_name = VALUES(stock_name),
+			stock_code = VALUES(stock_code),
+			stock_feature = VALUES(stock_feature),
+			stock_amount = VALUES(stock_amount),
+			stock_sum = VALUES(stock_sum)
+	</insert>
+</mapper>
