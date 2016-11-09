@@ -10,16 +10,16 @@ public class StockBootstrap {
 	public static void main(String[] args){
 		ArrayList<String> files = new ArrayList<String>();
 		files.add("classpath:applicationContext.xml");
-		if(new File(System.getProperty("user.dir") + File.separator + "applicationContext-crawler.xml").exists()){
-			files.add("file:${user.dir}/applicationContext-crawler.xml");
+		String externalFilePath = System.getProperty("user.dir") + File.separator + "config"+File.separator+"applicationContext-crawler.xml";
+		if(new File(externalFilePath).exists()){
+			files.add(externalFilePath);
 			System.out.println("加载外部配置文件");
 		}else{
 			files.add("classpath:applicationContext-crawler.xml");
-			System.out.println("加载自带配置文件");
+			System.out.println("加载自带配置文件,用户路径:"+System.getProperty("user.dir"));
 		}
 		
 		String[] str = files.toArray(new String[]{});
 		new ClassPathXmlApplicationContext(str);
-        System.out.println("数据抽取模块初始化完成");
 	}
 }

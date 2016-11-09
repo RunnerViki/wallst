@@ -5,6 +5,9 @@
 <mapper namespace="com.viki.stock.dao.HugeChargeDao">
 	<select id="query" parameterType="map" resultType="com.viki.stock.bean.HugeChargeCrarge">
 		select * from stock_huge_charge
+		<if test="limit_count != null">
+			limit ${limit_count}
+		</if>
 	</select>
 	
 	<insert id="insert" parameterType="com.viki.stock.bean.HugeChargeCrarge">

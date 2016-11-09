@@ -1,7 +1,7 @@
 package com.viki.stock.crawler;
 
-import com.viki.stock.config.JsoupUtil;
 import com.viki.stock.bean.HugeChargeCrarge;
+import com.viki.stock.config.JsoupUtil;
 import com.viki.stock.config.SysConfig;
 import com.viki.stock.dao.HugeChargeDao;
 import org.jsoup.nodes.Document;
@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/11/6.
@@ -24,6 +26,9 @@ public class SnHugeChargeCrawler {
     private HugeChargeDao hugeChargeDao;
 
     public void run(){
+        if(!isNeedFlushGlobal()){
+            return;
+        }
         int page = 1;
         while(true){
             try{
@@ -51,8 +56,16 @@ public class SnHugeChargeCrawler {
             }finally {
                 page ++;
             }
-
         }
+    }
 
+    public boolean isNeedFlushGlobal(){
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("limit_count", 1);
+        List<HugeChargeCrarge> hugeChargeCrargeList = hugeChargeDao.query(params);
+        if(hugeChargeCrargeList != null && hugeChargeCrargeList.size() > 0){
+            return false;
+        }
+        return true;
     }
 }
