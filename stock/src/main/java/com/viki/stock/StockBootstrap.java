@@ -10,9 +10,9 @@ public class StockBootstrap {
 	public static void main(String[] args){
 		ArrayList<String> files = new ArrayList<String>();
 		files.add("classpath:applicationContext.xml");
-		String externalFilePath = System.getProperty("user.dir") + File.separator + "config"+File.separator+"applicationContext-crawler.xml";
+		String externalFilePath = System.getProperty("user.dir") + File.separator + "config" +File.separator+"applicationContext-crawler.xml";
 		if(new File(externalFilePath).exists()){
-			files.add(externalFilePath);
+			files.add("file:${user.dir}/config/applicationContext-crawler.xml");
 			System.out.println("加载外部配置文件");
 		}else{
 			files.add("classpath:applicationContext-crawler.xml");

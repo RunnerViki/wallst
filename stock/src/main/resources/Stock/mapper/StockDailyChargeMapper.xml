@@ -15,7 +15,7 @@
 
 	</select>
 
-	<insert id="merge" parameterType="com.viki.stock.bean.StockDailyCharge">
+	<insert id="merge" parameterType="com.viki.stock.bean.StockDailyCharge" >
 		INSERT INTO stock_daily_charge(
 			STOCK_CODE,
 			STOCK_NAME,
