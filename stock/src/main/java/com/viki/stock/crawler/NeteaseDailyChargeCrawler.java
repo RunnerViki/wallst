@@ -2,6 +2,7 @@ package com.viki.stock.crawler;
 
 import com.viki.stock.bean.StockBasicInfo;
 import com.viki.stock.bean.StockDailyCharge;
+import com.viki.stock.config.SysConfig;
 import com.viki.stock.dao.DailyChargeDao;
 import com.viki.stock.dao.StockBasicInfoDao;
 import org.slf4j.Logger;
@@ -58,9 +59,11 @@ public class NeteaseDailyChargeCrawler {
 
     }
 
+    String csv_path = SysConfig.getProperty("data.persistence.rootpath") + SysConfig.getProperty("data.persistence.subpath.stock.dailyreport.csv");
+
     public void crawlPage(String stockCode){
         if(download(stockCode)){
-            readCsvNio(new File("E:\\stk\\stock\\dailyreport\\"+stockCode+".csv"), stockCode);
+            readCsvNio(new File(csv_path.replace("{stock}", stockCode)), stockCode);
         }
 
     }
@@ -91,7 +94,7 @@ public class NeteaseDailyChargeCrawler {
             f.createNewFile();
             int byteread = 0;
             String prefix = stockCode.startsWith("6") ? "0" : "1";
-            URL url = new URL("http://quotes.money.163.com/service/chddata.html?code="+prefix+stockCode+"&start=20010810&end=20161122&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP");
+            URL url = new URL("http://quotes.money.163.com/service/chddata.html?code="+prefix+stockCode+"&start=20010810&end=20161205&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER;TCAP;MCAP");
             URLConnection conn = url.openConnection();
             conn.setConnectTimeout(5000);
             InputStream inStream = conn.getInputStream();
