@@ -9,7 +9,7 @@
 
 	<task:scheduler id="ext_task_group" pool-size="10"/>
 	<task:scheduled-tasks scheduler="ext_task_group" >
-		<!--<task:scheduled ref="task-NetEaseChageDetailCrawler" method="run" cron="0 0 21 * * ?" remark="从网易获取交易详情数据文件，下载到本地"/>
+		<task:scheduled ref="task-NetEaseChageDetailCrawler" method="run" cron="0 0 21 * * ?" remark="从网易获取交易详情数据文件，下载到本地"/>
 		<task:scheduled ref="task-NetEaseChargeDetailConveter" method="run" fixed-delay="3600000" remark="把网易数据转换后保存到数据库， 每小时一次"/>
 		<task:scheduled ref="task-cmfb-tencent" method="run" cron="0 0 20 * * ?" remark="从腾讯获取筹码分布数据"/>
 		<task:scheduled ref="task-stockBaseInfo-ths" method="run" cron="0 10 20 * * ?" remark="股票基础数据"/>
@@ -17,8 +17,8 @@
 		<task:scheduled ref="task-THSLongHuRankCrawler" method="run" cron="0 30 22 * * ?" remark="龙虎榜交易数据"/>
 		<task:scheduled ref="task-stockAgentCrawler-ths" method="runPerday" cron="0 0 23 * * ?" remark="股票运营商数据"/>
 		<task:scheduled ref="task-THSStockDailyReportCrawler" method="run" cron="0 20 23 * * ?" remark="股票单日快照数据"/>
-		<task:scheduled ref="task-snHugeChargeCrawler-ths" method="run" fixed-delay="864000000" remark="大宗交易, only in first time"/>-->
-		<task:scheduled ref="task-NeteaseDailyChargeCrawler" method="run" fixed-delay="864000000" remark="每日统计记录"/>
+		<!--<task:scheduled ref="task-snHugeChargeCrawler-ths" method="run" fixed-delay="864000000" remark="大宗交易, 新浪的数据，只需要跑一次"/>-->
+		<task:scheduled ref="task-NeteaseDailyChargeCrawler" method="run" cron="0 20 22 * * ?" remark="每日统计记录"/>
 		<!--<task:scheduled ref="task-THSConceptCrawler" method="run" fixed-delay="86400000" remark="股票概念数据"/>-->
 	</task:scheduled-tasks>
 
