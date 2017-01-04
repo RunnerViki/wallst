@@ -193,7 +193,7 @@ public class NetEaseChageDetailCrawler {
 	class DownLoadRunnable implements Runnable {
 		private String date;
 		private String stockNum;
-
+		String YEAR = Calendar.getInstance().get(Calendar.YEAR) + "";
 		public DownLoadRunnable(File file, String stockNum, String date) {
 			this.stockNum = stockNum;
 			this.date = date;
